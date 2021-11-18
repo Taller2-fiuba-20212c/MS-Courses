@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field, HttpUrl
 from datetime import datetime, date
 from typing import List, Optional
+from models.examQuestion import ExamQuestion
+from models.examResolution import ExamResolution
 
 class ExamModel(BaseModel):
     name: str

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, HttpUrl
 from datetime import datetime, date
 from typing import List, Optional
+from models.examModel import ExamModel
 
 class Unit(BaseModel):
     name: str
@@ -9,7 +10,8 @@ class Unit(BaseModel):
     #Video: {videoId: xxx}
     #Text: {text: xxx}
     #PDFs: {fileId: xxx}
-    content: object
+    content: dict
+    exam: ExamModel
     creatorId: str 
     creationDate: datetime
     lastModificationDate: datetime
