@@ -11,7 +11,7 @@ class Unit(BaseModel):
     #Text: {text: xxx}
     #PDFs: {fileId: xxx}
     content: dict
-    exam: ExamModel
+    exam: Optional[ExamModel] = None
     creatorId: str 
     creationDate: datetime
     lastModificationDate: datetime

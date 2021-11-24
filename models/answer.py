@@ -8,6 +8,7 @@ class Answer(BaseModel):
     # Text: {answer: xxx}
     value: dict
     #NULL: sin corregir, OK, WRONG
-    state: Optional[str]
+    state: Optional[str] = None
+    grade: Optional[int] = None
     creationDate: datetime
     lastModificationDate: datetime

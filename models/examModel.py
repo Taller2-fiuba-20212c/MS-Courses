@@ -11,6 +11,7 @@ class ExamModel(BaseModel):
     examResolutions: List[ExamResolution] = []
     #CREATED, PUBLISHED, CLOSED
     state: str
+    minimumGrade: int
     creatorId: str
     creationDate: datetime
     lastModificationDate: datetime

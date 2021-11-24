@@ -16,6 +16,8 @@ class Course(BaseModel):
     collaborators: List[str] = []
     students: List[str] = []
     suscriptionIncluded: List[str] = []
+    image: Optional[str]
+    published: bool = False
     creatorId: str
     creationDate: datetime
     lastModificationDate: datetime

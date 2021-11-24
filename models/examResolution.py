@@ -7,7 +7,7 @@ class ExamResolution(BaseModel):
     answers: List[Answer] = []
     grade: Optional[int]
     #APPROVED, DISAPPROVED 
-    state: Optional[str]
+    state: Optional[str] = None
     creatorId: str
     creationDate: datetime
     lastModificationDate: datetime

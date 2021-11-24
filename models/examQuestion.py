@@ -6,6 +6,7 @@ class ExamQuestion(BaseModel):
     #TEXT
     questionType: str
     # Text: {question: xxx}
-    question: dict 
+    question: dict
+    maxGrade: int 
     creationDate: datetime
     lastModificationDate: datetime
