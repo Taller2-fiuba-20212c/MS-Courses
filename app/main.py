@@ -14,7 +14,7 @@ from bson import ObjectId
 app = FastAPI()
 
 
-@app.get("/courses", response_model=list[Course])
+@app.get("/courses", response_model=List[Course])
 async def getCourses():
     return list(connection.db.courses.find())
 
