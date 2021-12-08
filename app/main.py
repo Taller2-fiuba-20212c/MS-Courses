@@ -15,8 +15,11 @@ app = FastAPI()
 
 
 @app.get("/courses")
-async def getCourses():
-    return coursesEntity((connection.db.courses.find()))
+async def getCourses(skip: int = 0, limit: int = 0):
+    coursesList = coursesEntity((connection.db.courses.find().skip(skip).limit(limit)))
+    headers = {"X-Total-Count": str(connection.db.courses.count_documents({})).encode("utf-8").decode("utf-8") }
+    content = jsonable_encoder(coursesList)
+    return JSONResponse(content=content, headers=headers)
 
 @app.post("/courses")
 async def createCourse(course: Course):
