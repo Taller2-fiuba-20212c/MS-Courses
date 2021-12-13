@@ -7,7 +7,9 @@ from models.consult import Consult
 
 class Course(BaseModel):
     name: str
-    description: Optional[str] = Field(None, max_length=300) 
+    description: str = Field(None, max_length=300)
+    country: str
+    category: str 
     tags: List[str] = []
     units: List[Unit] = []
     exams: List[ExamModel] = []

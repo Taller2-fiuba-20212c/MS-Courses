@@ -74,5 +74,12 @@ async def getStudents(id: str):
     studentsJson = connection.db.courses.find_one({"_id": ObjectId(id)}, {'students' : 1, '_id': 0})
     return studentsJson['students']
 
+@app.get("/searchCoursesByCountryAndCategory")
+async def getCourses(country: str = ".", category: str = ""):
+    if (not category):
+        return coursesEntity(connection.db.courses.find({"country": {"$regex": country}}))
+    else:
+        categories = category.split(",")
+        return coursesEntity(connection.db.courses.find({"country": {"$regex": country}, "category": {"$in": categories}}))
 
 

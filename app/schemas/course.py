@@ -3,6 +3,8 @@ def courseEntity(course) -> dict:
         "id": str(course["_id"]),
         "name": course["name"],
         "description": course["description"],
+        "country": course["country"],
+        "category": course["category"],
         "tags": course["tags"],
         "units": course["units"],
         "exams": course["exams"],
