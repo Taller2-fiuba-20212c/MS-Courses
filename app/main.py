@@ -10,6 +10,7 @@ from schemas.course import courseEntity, coursesEntity
 from models.course import Course
 from models.examModel import ExamModel
 from bson import ObjectId
+import json
 
 app = FastAPI()
 
@@ -75,11 +76,33 @@ async def getStudents(id: str):
     return studentsJson['students']
 
 @app.get("/searchCoursesByCountryAndCategory")
-async def getCourses(country: str = ".", category: str = ""):
+async def searchCoursesByCountryAndCategory(country: str = ".", category: str = ""):
     if (not category):
         return coursesEntity(connection.db.courses.find({"country": {"$regex": country}}))
     else:
         categories = category.split(",")
         return coursesEntity(connection.db.courses.find({"country": {"$regex": country}, "category": {"$in": categories}}))
 
+@app.get("/searchByText")
+async def searchByText(randomText: str = "", suscription: str = "", category: str = ""):
+    query = '[{"$match": {"$or": [{"name": {"$regex": "' + randomText + '", "$options": "i"}}, {"description": {"$regex": "' + randomText + '", "$options": "i"}}]}}'
 
+    if (suscription):
+        query += ", " + '{"$match": {"suscriptionIncluded": "' + suscription + '"}}'
+    if (category):
+        categories = category.split(",")
+        query += ", " + '{"$match": {"category": {"$in": ' + str(categories) + '}}}'
+    
+    query += ']'
+    query = query.replace('\'', '"')
+    
+    pipeline = json.loads(query)
+    
+    return coursesEntity(connection.db.courses.aggregate(pipeline))
+
+@app.get("/getTop5Courses")
+async def getTop5Courses():
+    query = '[{"$addFields": {"numberOfStudents": {"$size": "$students"}}}, {"$sort": {"numberOfStudents": -1}}, {"$limit": 5}]'
+
+    pipeline = json.loads(query)
+    return coursesEntity(connection.db.courses.aggregate(pipeline))
