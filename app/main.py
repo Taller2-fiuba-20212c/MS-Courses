@@ -78,14 +78,14 @@ async def getStudents(id: str):
 @app.get("/searchCoursesByCountryAndCategory")
 async def searchCoursesByCountryAndCategory(country: str = ".", category: str = ""):
     if (not category):
-        return coursesEntity(connection.db.courses.find({"country": {"$regex": country}}))
+        return coursesEntity(connection.db.courses.find({"country": {"$regex": country, "$options": "i"}, "published": True}))
     else:
         categories = category.split(",")
-        return coursesEntity(connection.db.courses.find({"country": {"$regex": country}, "category": {"$in": categories}}))
+        return coursesEntity(connection.db.courses.find({"country": {"$regex": country, "$options": "i"}, "published": True, "category": {"$in": categories}}))
 
 @app.get("/searchByText")
 async def searchByText(randomText: str = "", suscription: str = "", category: str = ""):
-    query = '[{"$match": {"$or": [{"name": {"$regex": "' + randomText + '", "$options": "i"}}, {"description": {"$regex": "' + randomText + '", "$options": "i"}}]}}'
+    query = '[{"$match": {"published": true}}, {"$match": {"$or": [{"name": {"$regex": "' + randomText + '", "$options": "i"}}, {"description": {"$regex": "' + randomText + '", "$options": "i"}}]}}'
 
     if (suscription):
         query += ", " + '{"$match": {"suscriptionIncluded": "' + suscription + '"}}'
@@ -102,7 +102,7 @@ async def searchByText(randomText: str = "", suscription: str = "", category: st
 
 @app.get("/getTop5Courses")
 async def getTop5Courses():
-    query = '[{"$addFields": {"numberOfStudents": {"$size": "$students"}}}, {"$sort": {"numberOfStudents": -1}}, {"$limit": 5}]'
+    query = '[{"$match": {"published": true}}, {"$addFields": {"numberOfStudents": {"$size": "$students"}}}, {"$sort": {"numberOfStudents": -1}}, {"$limit": 5}]'
 
     pipeline = json.loads(query)
     return coursesEntity(connection.db.courses.aggregate(pipeline))
