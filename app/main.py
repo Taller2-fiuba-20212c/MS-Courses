@@ -9,6 +9,7 @@ from config import connection
 from schemas.course import courseEntity, coursesEntity
 from models.course import Course
 from models.examModel import ExamModel
+from models.unit import Unit
 from bson import ObjectId
 import json
 
@@ -106,3 +107,13 @@ async def getTop5Courses():
 
     pipeline = json.loads(query)
     return coursesEntity(connection.db.courses.aggregate(pipeline))
+
+@app.put("/courses/{id}/addUnit")
+async def addUnit(id: str, unit: Unit):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$push": {'units' : dict(unit)}})
+    return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
+
+@app.put("/courses/{id}/addExam")
+async def addExam(id: str, unitName: str, exam: ExamModel):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$set": {'units.$.exam': dict(exam)}})
+    return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))

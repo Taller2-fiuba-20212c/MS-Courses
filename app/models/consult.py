@@ -4,7 +4,7 @@ from typing import List, Optional
 
 class Consult(BaseModel):
     question: str
-    response: str
+    response: Optional[str] = None
     creatorId: str
     teacherId: str
     creationDate: datetime

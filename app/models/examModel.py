@@ -10,7 +10,7 @@ class ExamModel(BaseModel):
     examQuestions: List[ExamQuestion] = []
     examResolutions: List[ExamResolution] = []
     #CREATED, PUBLISHED, CLOSED
-    state: str
+    state: str = "CREATED"
     minimumGrade: int
     creatorId: str
     creationDate: datetime
