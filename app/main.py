@@ -9,6 +9,7 @@ from config import connection
 from schemas.course import courseEntity, coursesEntity
 from models.course import Course
 from models.examModel import ExamModel
+from models.examResolution import ExamResolution
 from models.unit import Unit
 from bson import ObjectId
 import json
@@ -76,6 +77,21 @@ async def getStudents(id: str):
     studentsJson = connection.db.courses.find_one({"_id": ObjectId(id)}, {'students' : 1, '_id': 0})
     return studentsJson['students']
 
+@app.put("/courses/{id}/removeTeacher")
+async def removeTeacher(id: str, teacherId: str):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$pull": {'teachers': teacherId}})
+    return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
+
+@app.put("/courses/{id}/removeCollaborator")
+async def removeCollaborator(id: str, collaboratorId: str):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$pull": {'collaborators': collaboratorId}})
+    return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
+
+@app.put("/courses/{id}/removeStudent")
+async def removeStudent(id: str, studentId: str):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$pull": {'students': studentId}})
+    return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
+
 @app.get("/searchCoursesByCountryAndCategory")
 async def searchCoursesByCountryAndCategory(country: str = ".", category: str = ""):
     if (not category):
@@ -116,4 +132,9 @@ async def addUnit(id: str, unit: Unit):
 @app.put("/courses/{id}/addExam")
 async def addExam(id: str, unitName: str, exam: ExamModel):
     connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$set": {'units.$.exam': dict(exam)}})
+    return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
+
+@app.put("/courses/{id}/addExamResolution")
+async def addExamResolution(id: str, unitName: str, examResolution: ExamResolution):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$push": {'units.$.exam.examResolutions': dict(examResolution)}})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
