@@ -1,6 +1,6 @@
 FROM python:3.7-alpine
 
-RUN pip install fastapi uvicorn
+RUN pip install fastapi uvicorn pymongo dnspython pydantic
 
 COPY ./start.sh /start.sh
 
