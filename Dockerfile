@@ -1,6 +1,6 @@
 FROM python:3.7-alpine
 
-RUN pip install fastapi[all]
+RUN pip install fastapi uvicorn
 
 COPY ./start.sh /start.sh
 
