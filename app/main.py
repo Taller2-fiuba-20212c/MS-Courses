@@ -126,15 +126,15 @@ async def getTop5Courses():
 
 @app.put("/courses/{id}/addUnit")
 async def addUnit(id: str, unit: Unit):
-    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$push": {'units' : dict(unit)}})
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$push": {'units' : unit.dict()}})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
 
 @app.put("/courses/{id}/addExam")
 async def addExam(id: str, unitName: str, exam: ExamModel):
-    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$set": {'units.$.exam': dict(exam)}})
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$set": {'units.$.exam': exam.dict()}})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
 
 @app.put("/courses/{id}/addExamResolution")
 async def addExamResolution(id: str, unitName: str, examResolution: ExamResolution):
-    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$push": {'units.$.exam.examResolutions': dict(examResolution)}})
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$push": {'units.$.exam.examResolutions': examResolution.dict()}})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
