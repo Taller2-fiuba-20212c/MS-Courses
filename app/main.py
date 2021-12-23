@@ -39,7 +39,7 @@ async def getCourseById(id: str):
 
 @app.put("/courses/{id}")
 async def updateCourse(id: str, course: Course):
-    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(course)})
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id)}, {"$set": course.dict()})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
 
 @app.delete("/courses/{id}", status_code=status.HTTP_204_NO_CONTENT)
