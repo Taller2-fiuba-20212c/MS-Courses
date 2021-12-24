@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ production ]
+  pull_request:
+    branches: [ production ]
+
+  workflow_dispatch:
+  
+#set environment variables 
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+  DD_API_KEY: ${{ secrets.DD_API_KEY }}
+  NODE_ENV: test
+
+jobs:      
+  deploy:
+    name: Deploy to Heroku
+    runs-on: ubuntu-latest
+    steps:
+
+    # Clone the repository
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    #- name: Install dependencies
+    #  run: npm install
+    #- name: Run tests 
+    #  run: npm test
+
+    # Build Docker image
+    - name: Docker login
+      run: |
+        docker system prune -a -f
+        docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+        
+    - name: Heroku setup
+      run: |
+        heroku config:add DD_LOG_LEVEL=DEBUG -a $APP_NAME
+        heroku labs:enable runtime-dyno-metadata -a $APP_NAME
+        heroku config:add DD_DYNO_HOST=true -a $APP_NAME
+        heroku config:add DD_API_KEY=$DD_API_KEY -a $APP_NAME        
+              
+    # Push the Docker image to Heroku Container Registry
+    - name: Publish
+      run: |
+        heroku container:push web -a $APP_NAME
+        heroku container:release web -a $APP_NAME
