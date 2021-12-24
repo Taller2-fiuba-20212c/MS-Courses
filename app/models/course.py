@@ -12,7 +12,6 @@ class Course(BaseModel):
     category: str 
     tags: List[str] = []
     units: List[Unit] = []
-    exams: List[ExamModel] = []
     consults: List[Consult] = []
     teachers: List[str] = []
     collaborators: List[str] = []

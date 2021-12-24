@@ -7,7 +7,6 @@ def courseEntity(course) -> dict:
         "category": course["category"],
         "tags": course["tags"],
         "units": course["units"],
-        "exams": course["exams"],
         "consults": course["consults"],
         "teachers": course["teachers"],
         "collaborators": course["collaborators"],
