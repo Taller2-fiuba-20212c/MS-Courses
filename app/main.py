@@ -138,3 +138,7 @@ async def addExam(id: str, unitName: str, exam: ExamModel):
 async def addExamResolution(id: str, unitName: str, examResolution: ExamResolution):
     connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$push": {'units.$.exam.examResolutions': examResolution.dict()}})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
+
+@app.get("/getUserCourses")
+async def getUserCourses(userId: str):
+    return coursesEntity(connection.db.courses.find({"$or": [{"students": userId}, {"collaborators": userId}, {"teachers": userId}]}))
