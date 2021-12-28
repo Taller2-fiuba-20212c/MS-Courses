@@ -136,6 +136,7 @@ async def addExam(id: str, unitName: str, exam: ExamModel):
 
 @app.put("/courses/{id}/addExamResolution")
 async def addExamResolution(id: str, unitName: str, examResolution: ExamResolution):
+    connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$pull": {'units.$.exam.examResolutions': {"creatorId": examResolution.creatorId}}})
     connection.db.courses.find_one_and_update({"_id": ObjectId(id), "units": {"$elemMatch": {"name": unitName}}}, {"$push": {'units.$.exam.examResolutions': examResolution.dict()}})
     return courseEntity(connection.db.courses.find_one({"_id": ObjectId(id)}))
 
