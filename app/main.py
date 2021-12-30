@@ -95,10 +95,10 @@ async def removeStudent(id: str, studentId: str):
 @app.get("/searchCoursesByCountryAndCategory")
 async def searchCoursesByCountryAndCategory(userId: str, country: str = ".", category: str = ""):
     if (not category):
-        return coursesEntity(connection.db.courses.find({"country": {"$regex": country, "$options": "i"}, "published": True, "students": {"$ne": userId}, "collaborators": {"$ne": userId}, "teachers": {"$ne": userId}}))
+        return coursesEntity(connection.db.courses.find({"country": {"$regex": country, "$options": "i"}, "published": True, "creatorId": {"$ne": userId}, "students": {"$ne": userId}, "collaborators": {"$ne": userId}, "teachers": {"$ne": userId}}))
     else:
         categories = category.split(",")
-        return coursesEntity(connection.db.courses.find({"country": {"$regex": country, "$options": "i"}, "published": True, "students": {"$ne": userId}, "collaborators": {"$ne": userId}, "teachers": {"$ne": userId}, "category": {"$in": categories}}))
+        return coursesEntity(connection.db.courses.find({"country": {"$regex": country, "$options": "i"}, "published": True, "creatorId": {"$ne": userId}, "students": {"$ne": userId}, "collaborators": {"$ne": userId}, "teachers": {"$ne": userId}, "category": {"$in": categories}}))
 
 @app.get("/searchByText")
 async def searchByText(randomText: str = "", suscription: str = "", category: str = ""):
