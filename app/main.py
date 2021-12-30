@@ -142,4 +142,4 @@ async def addExamResolution(id: str, unitName: str, examResolution: ExamResoluti
 
 @app.get("/getUserCourses")
 async def getUserCourses(userId: str):
-    return coursesEntity(connection.db.courses.find({"$or": [{"students": userId}, {"collaborators": userId}, {"teachers": userId}]}))
+    return coursesEntity(connection.db.courses.find({"$or": [{"students": userId}, {"collaborators": userId}, {"teachers": userId}, {"creatorId": userId}]}))
